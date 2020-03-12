@@ -1,0 +1,5 @@
+[workspace]
+
+members= [
+	"happs/agent-registration-open/zomes/agent_registration/code",
+]

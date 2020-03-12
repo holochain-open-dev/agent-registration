@@ -1,0 +1,4 @@
+{
+  "steps": [],
+  "artifact": "${CARGO_TARGET_DIR:-/tmp/happ_agent_registration/target}/wasm32-unknown-unknown/release/hc_zome_agent_registration.wasm"
+}

@@ -1,0 +1,35 @@
+{
+	"name": "happ-agent-registration",
+	"private": true,
+	"workspaces": [
+		"test"
+	],
+	"version": "0.0.1",
+	"description": "A set of cooperating modules implementing agent registration functionality as a Holochain app.",
+	"main": "/dev/null",
+	"scripts": {
+		"build": "npm-run-all build:dna_registration build:external_dna_social_triangulation build:dna_registration_withinvite",
+		"build:dna_registration": "cd happs/agent-registration-open && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
+		"build:external_dna_social_triangulation": "cd ../happ-social-triangulation && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
+		"build:dna_registration_withinvite": "cd happs/agent-registration-invite-only && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com/holochain-open-dev/agent-registration.git"
+	},
+	"keywords": [
+		"Holochain",
+		"agent",
+		"hApp",
+		"registration"
+	],
+	"author": "Holochain opendev contributors",
+	"license": "Apache 2.0",
+	"bugs": {
+		"url": "https://github.com/holochain-open-dev/agent-registration/issues"
+	},
+	"homepage": "https://github.com/holochain-open-dev/agent-registration#readme",
+	"devDependencies": {
+		"npm-run-all": "^4.1.5"
+	}
+}
