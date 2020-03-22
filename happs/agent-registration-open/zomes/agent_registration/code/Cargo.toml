@@ -7,9 +7,11 @@ edition = "2018"
 [dependencies]
 serde = "=1.0.89"
 serde_json = { version = "=1.0.39", features = ["preserve_order"] }
-# :DUPE: hdk-rust-revid
-hdk = "=0.0.42-alpha5"
-hdk_proc_macros = "=0.0.42-alpha5"
+hdk = "~0.0.42-alpha5"
+hdk_proc_macros = "~0.0.42-alpha5"
+
+hc_zome_agent_registration_storage = { path = "../../../../../lib/storage" }
+hc_zome_agent_registration_lib = { path = "../../../../../lib/lib" }
 
 [lib]
 path = "src/lib.rs"
