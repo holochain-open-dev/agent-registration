@@ -7,3 +7,4 @@ yarn.lock
 npm-error.log
 yarn-error.log
 README.md
+build-deps.sh
