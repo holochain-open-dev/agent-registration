@@ -59,7 +59,7 @@ pub fn agents_root_entry_def() -> ValidatingEntryType {
         validation_package: || {
             hdk::ValidationPackageDefinition::Entry
         },
-        validation: |validation_data: hdk::EntryValidationData<Address>| {
+        validation: |validation_data: hdk::EntryValidationData<String>| {
             match validation_data {
                 EntryValidationData::Create { .. } => {
                     Ok(())
