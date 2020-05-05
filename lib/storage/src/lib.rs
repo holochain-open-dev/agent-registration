@@ -68,7 +68,7 @@ pub fn agents_root_entry_def() -> ValidatingEntryType {
             }
         },
         links: [
-            from!(
+            to!(
                 AGENT_ANCHOR_ID,
                 link_type: AGENT_ANCHOR_LINK_TYPE,
                 validation_package: || {
