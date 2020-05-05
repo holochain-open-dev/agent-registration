@@ -63,8 +63,8 @@ const buildRunner = () => new Orchestrator({
  * Create per-agent interfaces to the DNA
  */
 
-const buildPlayer = async (scenario, playerName, config) => {
-  const players = await scenario.players({ [playerName]: config }, true)
+const buildPlayer = async (scenario, playerName, config, connectInitially = true) => {
+  const players = await scenario.players({ [playerName]: config }, connectInitially)
   return players[playerName]
 }
 
