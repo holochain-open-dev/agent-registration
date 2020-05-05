@@ -18,12 +18,16 @@ use hc_zome_agent_registration_storage_consts::*;
 
 /// Returns true if the given agent ID is a member of the local DNA
 pub fn is_registered_agent(address: Address) -> ZomeApiResult<bool> {
-    let links_result = get_registered_agents()?;
-    Ok(links_result.contains(&address))
+    let links_result = get_links(
+        &get_root_entry_address()?,
+        LinkMatch::Exactly(AGENT_ANCHOR_LINK_TYPE.into()),
+        LinkMatch::Exactly(address.to_string().as_ref())
+    )?.addresses();
+    Ok(links_result.len() > 0)
 }
 
 pub fn get_registered_agents() -> ZomeApiResult<Vec<Address>> {
-    Ok(get_links(&get_root_entry_address()?, LinkMatch::Exactly(AGENT_ANCHOR_LINK_TYPE.into()), LinkMatch::Exactly(""))?.addresses())
+    Ok(get_links(&get_root_entry_address()?, LinkMatch::Exactly(AGENT_ANCHOR_LINK_TYPE.into()), LinkMatch::Any)?.addresses())
 }
 
 /// Load the well-known base anchor for agent queries.
