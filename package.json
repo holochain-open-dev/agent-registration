@@ -11,7 +11,8 @@
 		"build": "npm-run-all build:dna_registration build:external_dna_social_triangulation build:dna_registration_withinvite",
 		"build:dna_registration": "cd happs/agent-registration-open && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
 		"build:external_dna_social_triangulation": "cd ../happ-social-triangulation && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
-		"build:dna_registration_withinvite": "cd happs/agent-registration-invite-only && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package"
+    "build:dna_registration_withinvite": "cd happs/agent-registration-invite-only && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
+    "test": "cd test && npm test"
 	},
 	"repository": {
 		"type": "git",
