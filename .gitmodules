@@ -1,0 +1,3 @@
+[submodule "thirdparty/happ-social-triangulation"]
+	path = thirdparty/happ-social-triangulation
+	url = git@github.com:holochain-open-dev/social-triangulation.git
