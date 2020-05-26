@@ -17,6 +17,8 @@ runner.registerScenario('Agent registration API', async (s, t) => {
 
   const bob = await buildPlayer(s, 'bob', config, false)
 
+  await s.consistency()
+
   let resp = await alice.call('agents', 'agent_registration', 'get_registered_agents', {})
   t.equal(resp.Ok[0], aliceAddr, 'querying agent is included in registered agent list as they themselves are accessing')
   t.equal(resp.Ok.length, 1, 'only single agent is returned')
@@ -36,6 +38,8 @@ runner.registerScenario('Agent registration API', async (s, t) => {
 
   // Bob hits the DNA for the first time
   resp = await bob.call('agents', 'agent_registration', 'get_registered_agents', {})
+
+  await s.consistency()
 
   resp = await alice.call('agents', 'agent_registration', 'is_registered_agent', { address: bobAddr })
   t.equal(resp.Ok, true, 'other agents detected after they have accessed')
