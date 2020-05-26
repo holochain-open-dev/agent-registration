@@ -17,7 +17,7 @@ use hdk::api::{
 use hc_zome_agent_registration_storage_consts::*;
 
 /// Returns true if the given agent ID is a member of the local DNA
-pub fn is_registered_agent(address: Address) -> ZomeApiResult<bool> {
+pub fn is_registered_agent(address: &Address) -> ZomeApiResult<bool> {
     let links_result = get_links(
         &get_root_entry_address()?,
         LinkMatch::Exactly(AGENT_ANCHOR_LINK_TYPE.into()),
@@ -26,6 +26,7 @@ pub fn is_registered_agent(address: Address) -> ZomeApiResult<bool> {
     Ok(links_result.len() > 0)
 }
 
+/// Returns the addresses of all agents who have accessed the local DNA
 pub fn get_registered_agents() -> ZomeApiResult<Vec<Address>> {
     Ok(get_links(&get_root_entry_address()?, LinkMatch::Exactly(AGENT_ANCHOR_LINK_TYPE.into()), LinkMatch::Any)?.addresses())
 }
