@@ -1,3 +1,10 @@
+.cargo/
 Cargo.lock
 node_modules/
-happs/**/dist/
+
+# Rust build files
+/target/
+# Holochain build files
+/dnas/**/*.dna
+/happs/**/.hc
+/happs/**/*.happ
