@@ -22,9 +22,9 @@ process.on('unhandledRejection', error => {
 })
 
 // DNA loader, to be used with `buildTestScenario` when constructing DNAs for testing
-const getDNA = ((dnas) => (path) => (Config.dna(dnas[path], path)))({
-  'agent-registration-open': path.resolve(__dirname, '../happs/agent-registration-open/dist/agent-registration-open.dna.json'),
-  'agent-registration-invite-only': path.resolve(__dirname, '../happs/agent-registration-invite-only/dist/agent-registration-invite-only.dna.json'),
+const getDNA = ((dnas) => (name) => (dnas[name]))({
+  'agent-registration-open': path.resolve(__dirname, '../dnas/agent-registration-open/agent_registration_open_public_example.dna'),
+  'agent-registration-invite-only': path.resolve(__dirname, '../dnas/agent-registration-invite-only/agent_registration_invite_only_private_example.dna'),
 })
 
 /**
@@ -62,14 +62,33 @@ const buildRunner = () => new Orchestrator({
 /**
  * Create per-agent interfaces to the DNA
  */
+const buildPlayer = async (scenario, config, agentDNAs, autoSpawn = true) => {
+  const [player] = await scenario.players([config], autoSpawn)
+  const [[firstHapp]] = await player.installAgentsHapps([[agentDNAs.map(getDNA)]])
 
-const buildPlayer = async (scenario, playerName, config, connectInitially = true) => {
-  const players = await scenario.players({ [playerName]: config }, connectInitially)
-  return players[playerName]
+  // :SHONK: workaround nondeterministic return order for app cells, luckily nicknames are prefixed with numeric ID
+  // but :WARNING: this may also break if >10 DNAs running in the same player!
+  firstHapp.cells.sort((a, b) => {
+    if (a.cellNick === b.cellNick) return 0
+    return a.cellNick > b.cellNick ? 1 : -1
+  })
+
+  shimConsistency(scenario)
+
+  return {
+    ...firstHapp,
+    player,
+  }
+}
+
+// temporary method for RSM until conductor can interpret consistency
+function shimConsistency(s) {
+  s.consistency = () => new Promise((resolve, reject) => {
+    setTimeout(resolve, 100)
+  })
 }
 
 module.exports = {
-  getDNA,
   buildConfig,
   buildPlayer,
   buildRunner,

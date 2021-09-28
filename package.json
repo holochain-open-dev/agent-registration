@@ -10,8 +10,8 @@
 	"scripts": {
     "preinstall": "npx only-allow pnpm",
     "build": "npm-run-all build:crates build:package",
-    "build:crates": "CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown",
-    "build:package": "npm-run-all build:dna_registration build:dna_registration_withinvite",
+    "build:crates": "CARGO_TARGET_DIR=./target cargo build --release --target wasm32-unknown-unknown",
+    "build:package": "npm-run-all build:dna_registration",
 		"build:dna_registration": "hc dna pack dnas/agent-registration-open",
     "build:dna_registration_withinvite": "hc dna pack dnas/agent-registration-invite-only",
     "test": "cd test && npm test"

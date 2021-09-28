@@ -1,51 +1,50 @@
 const {
-  getDNA,
   buildConfig,
-  buildRunner,
   buildPlayer,
+  buildRunner,
 } = require('./init')
 
 const runner = buildRunner()
 
-const config = buildConfig({
-  agents: getDNA('agent-registration-open'),
-}, {})
+const config = buildConfig()
 
 runner.registerScenario('Agent registration API', async (s, t) => {
-  const alice = await buildPlayer(s, 'alice', config)
-  const aliceAddr = alice.instance('agents').agentAddress
-
-  const bob = await buildPlayer(s, 'bob', config, false)
-
+  // load Alice and connect
+  const alice = await buildPlayer(s, config, ['agent-registration-open'])
+  const [alice_cell] = alice.cells
+  const aliceAddr = alice.agent
   await s.consistency()
 
-  let resp = await alice.call('agents', 'agent_registration', 'get_registered_agents', {})
-  t.equal(resp.Ok[0], aliceAddr, 'querying agent is included in registered agent list as they themselves are accessing')
-  t.equal(resp.Ok.length, 1, 'only single agent is returned')
+  let resp = await alice_cell.call('agent_registration', 'get_registered', null)
+  t.equal(resp[0], aliceAddr, 'querying agent is included in registered agent list as they themselves are accessing')
+  t.equal(resp.length, 1, 'only single agent is returned')
 
-  resp = await alice.call('agents', 'agent_registration', 'get_registered_agents', {})
-  t.equal(resp.Ok.length, 1, 'agent is only recorded once')
+  resp = await alice_cell.call('agent_registration', 'get_registered', null)
+  t.equal(resp.length, 1, 'agent is only recorded once')
 
-  resp = await alice.call('agents', 'agent_registration', 'is_registered_agent', { address: aliceAddr })
-  t.equal(resp.Ok, true, 'can check own registration status')
+  resp = await alice_cell.call('agent_registration', 'is_registered', { address: aliceAddr })
+  t.equal(resp, true, 'can check own registration status')
 
   // Load Bob, but don't hit the network yet
-  await bob.spawn()
-  const bobAddr = bob.instance('agents').agentAddress
+  const bob = await buildPlayer(s, config, ['agent-registration-open'], false)
+  const [bob_cell] = bob.cells
+  const bobAddr = bob.agent
 
-  resp = await alice.call('agents', 'agent_registration', 'is_registered_agent', { address: bobAddr })
-  t.equal(resp.Ok, false, 'can check other registration statuses')
+  resp = await alice_cell.call('agent_registration', 'is_registered', { address: bobAddr })
+  t.equal(resp, false, 'can check other registration statuses')
 
   // Bob hits the DNA for the first time
-  resp = await bob.call('agents', 'agent_registration', 'get_registered_agents', {})
+  bob.startup()
+  await s.consistency()
+  resp = await bob_cell.call('agent_registration', 'get_registered', null)
 
   await s.consistency()
 
-  resp = await alice.call('agents', 'agent_registration', 'is_registered_agent', { address: bobAddr })
-  t.equal(resp.Ok, true, 'other agents detected after they have accessed')
+  resp = await alice_cell.call('agent_registration', 'is_registered', { address: bobAddr })
+  t.equal(resp, true, 'other agents detected after they have accessed')
 
-  resp = await alice.call('agents', 'agent_registration', 'get_registered_agents', {})
-  t.equal(resp.Ok.length, 2, 'new agents are recorded')
+  resp = await alice_cell.call('agent_registration', 'get_registered', null)
+  t.equal(resp.length, 2, 'new agents are recorded')
 })
 
 runner.run()
