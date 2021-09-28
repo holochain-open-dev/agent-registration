@@ -84,15 +84,18 @@ pub fn validate_registration_path(validation_data: ValidateData) -> ExternResult
 ///
 fn validate_path_agent_matches(path_with_agent_suffix: &Path, signed_header: &SignedHeaderHashed) -> ExternResult<ValidateCallbackResult>
 {
+    let written_agent_pubkey = agent_pubkey_from_trailing_component(path_with_agent_suffix)?;
+    verify_signature(written_agent_pubkey, signed_header.signature().to_owned(), signed_header.header())?;
+    Ok(ValidateCallbackResult::Valid)
+}
+
+fn agent_pubkey_from_trailing_component(path_with_agent_suffix: &Path) -> ExternResult<AgentPubKey>
+{
     let components: &Vec<Component> = path_with_agent_suffix.as_ref();
     let last = components.as_slice().last().ok_or(
         WasmError::Guest("agent registration Path of invalid length".to_string())
     )?;
-    let written_agent_pubkey = AgentPubKey::from_raw_39(last.as_ref().to_vec()).map_err(|_e| {
+    AgentPubKey::from_raw_39(last.as_ref().to_vec()).map_err(|_e| {
         WasmError::Guest(format!("agent registration has invalid pubKey {:?}", last))
-    })?;
-
-    verify_signature(written_agent_pubkey, signed_header.signature().to_owned(), signed_header.header())?;
-
-    Ok(ValidateCallbackResult::Valid)
+    })
 }
