@@ -8,8 +8,8 @@ edition = "2018"
 serde = "1"
 hdk = "0.0"
 
-hc_zome_agent_registration_storage = { path = "../storage" }
 hc_zome_agent_registration_lib = { path = "../lib" }
+hc_zome_agent_registration_rpc = { path = "../rpc" }
 
 [lib]
 path = "src/lib.rs"

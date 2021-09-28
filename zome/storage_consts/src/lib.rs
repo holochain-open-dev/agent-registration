@@ -8,6 +8,4 @@
  * @since   2020-03-22
  */
 
-pub const AGENT_ROOT_ANCHOR_ID: &str = "registered_agents_root";
-pub const AGENT_ANCHOR_LINK_TYPE: &str = "registered_agent";
-pub const AGENT_ANCHOR_ID: &str = "%agent_id";
+pub const AGENT_ROOT_ANCHOR_ID: &str = "registered_agents";

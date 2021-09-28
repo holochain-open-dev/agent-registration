@@ -1,35 +1,32 @@
-#![feature(proc_macro_hygiene)]
-
 use hdk::prelude::*;
-use hdk_proc_macros::zome;
 
-use hc_zome_agent_registration_storage;
-use hc_zome_agent_registration_lib;
+use hc_zome_agent_registration_lib::*;
+use hc_zome_agent_registration_rpc::*;
 
-#[zome]
-mod agent_registration_zome {
-    #[init]
-    fn init() {
-        hc_zome_agent_registration_storage::init()
-    }
+#[hdk_extern]
+fn entry_defs(_: ()) -> ExternResult<EntryDefsCallbackResult> {
+    Ok(EntryDefsCallbackResult::from(vec![
+        Path::entry_def(),
+    ]))
+}
 
-    #[validate_agent]
-    pub fn validate_agent(validation_data: EntryValidationData<AgentId>) {
-        Ok(())
-    }
+#[hdk_extern]
+fn init(_: ()) -> ExternResult<InitCallbackResult> {
+    init_agent_registration_storage()?;
+    Ok(InitCallbackResult::Pass)
+}
 
-    #[entry_def]
-    pub fn agents_root_entry_def() -> ValidatingEntryType {
-        hc_zome_agent_registration_storage::agents_root_entry_def()
-    }
+#[hdk_extern]
+fn validate(validation_data: ValidateData) -> ExternResult<ValidateCallbackResult> {
+    validate_registration_path(validation_data)
+}
 
-    #[zome_fn("hc_public")]
-    pub fn is_registered_agent(address: Address) -> ZomeApiResult<bool> {
-        hc_zome_agent_registration_lib::is_registered_agent(&address)
-    }
+#[hdk_extern]
+fn is_registered(RegistrationQueryParams { pub_key }: RegistrationQueryParams) -> ExternResult<bool> {
+    is_registered_agent(&pub_key)
+}
 
-    #[zome_fn("hc_public")]
-    pub fn get_registered_agents() -> ZomeApiResult<Vec<Address>> {
-        hc_zome_agent_registration_lib::get_registered_agents()
-    }
+#[hdk_extern]
+fn get_registered(_: ()) -> ExternResult<Vec<AgentPubKey>> {
+    get_registered_agents()
 }

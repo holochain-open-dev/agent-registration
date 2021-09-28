@@ -1,13 +1,12 @@
 [package]
-name = "hc_zome_agent_registration_lib"
+name = "hc_zome_agent_registration_rpc"
 version = "0.1.0"
 authors = ["pospi <pospi@spadgos.com>"]
 edition = "2018"
 
 [dependencies]
-hdk = "0.0"
-
-hc_zome_agent_registration_storage = { path = "../storage" }
+serde = "1"
+holo_hash = "0.0.7"
 
 [lib]
 crate-type = ["lib"]
