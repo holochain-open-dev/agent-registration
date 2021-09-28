@@ -1,0 +1,14 @@
+manifest_version: "1"
+name: "agent_registration_invite_only_private_example"
+uuid: ""
+properties:
+  agent_registration:
+    advertise_registered_agents: false
+  social_triangulation:
+		initial_members": ["TODO_AGENT_ID_1"]
+    necessary_vouches: 1
+zomes:
+  - name: agent_registration
+    bundled: "../../target/wasm32-unknown-unknown/release/hc_zome_agent_registration.wasm"
+  - name: social_triangulation
+    bundled: "../../target/wasm32-unknown-unknown/release/hc_zome_social_triangulation.wasm"

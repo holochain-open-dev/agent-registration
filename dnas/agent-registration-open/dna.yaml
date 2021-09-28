@@ -1,0 +1,9 @@
+manifest_version: "1"
+name: "agent_registration_open_public_example"
+uuid: ""
+properties:
+  agent_registration:
+    advertise_registered_agents: true
+zomes:
+  - name: agent_registration
+    bundled: "../../target/wasm32-unknown-unknown/release/hc_zome_agent_registration.wasm"
