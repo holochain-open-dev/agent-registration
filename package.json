@@ -8,10 +8,12 @@
 	"description": "A set of cooperating modules implementing agent registration functionality as a Holochain app.",
 	"main": "/dev/null",
 	"scripts": {
-		"build": "npm-run-all build:dna_registration build:external_dna_social_triangulation build:dna_registration_withinvite",
-		"build:dna_registration": "cd happs/agent-registration-open && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
-		"build:external_dna_social_triangulation": "cd thirdparty/happ-social-triangulation && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
-    "build:dna_registration_withinvite": "cd happs/agent-registration-invite-only && CARGO_TARGET_DIR=/tmp/happ_agent_registration/target hc package",
+    "preinstall": "npx only-allow pnpm",
+    "build": "npm-run-all build:crates build:package",
+    "build:crates": "CARGO_TARGET_DIR=target cargo build --release --target wasm32-unknown-unknown",
+    "build:package": "npm-run-all build:dna_registration build:dna_registration_withinvite",
+		"build:dna_registration": "hc dna pack dnas/agent-registration-open",
+    "build:dna_registration_withinvite": "hc dna pack dnas/agent-registration-invite-only",
     "test": "cd test && npm test"
 	},
 	"repository": {
