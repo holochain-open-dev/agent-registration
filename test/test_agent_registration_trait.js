@@ -1,46 +1,46 @@
 const {
+  getDNA,
   buildConfig,
-  buildPlayer,
   buildRunner,
+  shimConsistency,
 } = require('./init')
 
 const runner = buildRunner()
 
 const config = buildConfig()
 
-runner.registerScenario('Agent registration API', async (s, t) => {
+const TEST_DNAS = ['agent-registration-open']
+
+runner.registerScenario('Agent registration API', async (scenario, t) => {
+  shimConsistency(scenario)
+
+  const [alice, bob] = await scenario.players([config, config], false)
+
   // load Alice and connect
-  const alice = await buildPlayer(s, config, ['agent-registration-open'])
-  const [alice_cell] = alice.cells
-  const aliceAddr = alice.agent
-  await s.consistency()
+  await alice.startup()
+  const [[alice_happ]] = await alice.installAgentsHapps([[TEST_DNAS.map(getDNA)]])
+  const [alice_cell] = alice_happ.cells
+  const aliceAddr = alice_happ.agent
+  await scenario.consistency()
 
   let resp = await alice_cell.call('agent_registration', 'get_registered', null)
-  t.equal(resp[0], aliceAddr, 'querying agent is included in registered agent list as they themselves are accessing')
+  t.deepEqual(resp[0], aliceAddr, 'querying agent is included in registered agent list as they themselves are accessing')
   t.equal(resp.length, 1, 'only single agent is returned')
 
   resp = await alice_cell.call('agent_registration', 'get_registered', null)
   t.equal(resp.length, 1, 'agent is only recorded once')
 
-  resp = await alice_cell.call('agent_registration', 'is_registered', { address: aliceAddr })
+  resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: aliceAddr })
   t.equal(resp, true, 'can check own registration status')
 
-  // Load Bob, but don't hit the network yet
-  const bob = await buildPlayer(s, config, ['agent-registration-open'], false)
-  const [bob_cell] = bob.cells
-  const bobAddr = bob.agent
+  // Bob installs the hApp and hits the DNA for the first time
+  await bob.startup()
+  const [[bob_happ]] = await bob.installAgentsHapps([[TEST_DNAS.map(getDNA)]])
+  const [bob_cell] = bob_happ.cells
+  const bobAddr = bob_happ.agent
+  await scenario.consistency()
 
-  resp = await alice_cell.call('agent_registration', 'is_registered', { address: bobAddr })
-  t.equal(resp, false, 'can check other registration statuses')
-
-  // Bob hits the DNA for the first time
-  bob.startup()
-  await s.consistency()
-  resp = await bob_cell.call('agent_registration', 'get_registered', null)
-
-  await s.consistency()
-
-  resp = await alice_cell.call('agent_registration', 'is_registered', { address: bobAddr })
+  resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
   t.equal(resp, true, 'other agents detected after they have accessed')
 
   resp = await alice_cell.call('agent_registration', 'get_registered', null)

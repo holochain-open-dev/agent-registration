@@ -59,28 +59,6 @@ const buildRunner = () => new Orchestrator({
   ),
 })
 
-/**
- * Create per-agent interfaces to the DNA
- */
-const buildPlayer = async (scenario, config, agentDNAs, autoSpawn = true) => {
-  const [player] = await scenario.players([config], autoSpawn)
-  const [[firstHapp]] = await player.installAgentsHapps([[agentDNAs.map(getDNA)]])
-
-  // :SHONK: workaround nondeterministic return order for app cells, luckily nicknames are prefixed with numeric ID
-  // but :WARNING: this may also break if >10 DNAs running in the same player!
-  firstHapp.cells.sort((a, b) => {
-    if (a.cellNick === b.cellNick) return 0
-    return a.cellNick > b.cellNick ? 1 : -1
-  })
-
-  shimConsistency(scenario)
-
-  return {
-    ...firstHapp,
-    player,
-  }
-}
-
 // temporary method for RSM until conductor can interpret consistency
 function shimConsistency(s) {
   s.consistency = () => new Promise((resolve, reject) => {
@@ -89,7 +67,8 @@ function shimConsistency(s) {
 }
 
 module.exports = {
+  getDNA,
   buildConfig,
-  buildPlayer,
   buildRunner,
+  shimConsistency,
 }
