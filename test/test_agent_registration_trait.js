@@ -41,6 +41,13 @@ runner.registerScenario('Agent registration API', async (scenario, t) => {
   await scenario.consistency()
 
   resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
+  t.equal(resp, false, 'other agents silent until they have accessed the DHT')
+
+  resp = await bob_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
+  t.equal(resp, true, 'can check own registration status upon accessing the DHT')
+  await scenario.consistency()
+
+  resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
   t.equal(resp, true, 'other agents detected after they have accessed')
 
   resp = await alice_cell.call('agent_registration', 'get_registered', null)
