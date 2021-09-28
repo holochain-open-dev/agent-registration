@@ -21,8 +21,17 @@ pub fn is_registered_agent(address: &AgentPubKey) -> ExternResult<bool> {
 /// Returns the addresses of all agents who have accessed the local DNA
 pub fn get_registered_agents() -> ExternResult<Vec<AgentPubKey>> {
     let child_paths = get_root_anchor().children()?;
-    debug!("TODO CHILDRENS {:?}", child_paths);
-    Ok(vec![])
+
+    Ok(child_paths.into_inner().iter().map(|l| {
+        let element = get(l.target.to_owned(), GetOptions::default())?.ok_or(WasmError::Guest(format!("Agent registration link invalid: {:?}", l.target)))?;
+        let (_signed_header, entry) = element.into_inner();
+        let entry = match entry {
+            ElementEntry::Present(e) => Ok(e),
+            _ => Err(WasmError::Guest(format!("No entry for registered agent link to {:?}", l.target))),
+        }?;
+        let child_path = Path::try_from(&entry)?;
+        agent_pubkey_from_trailing_component(&child_path)
+    }).filter_map(Result::ok).collect())
 }
 
 /// Initialises data needed to query registered agents from the network.
