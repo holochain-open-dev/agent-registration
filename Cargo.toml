@@ -1,8 +1,8 @@
 [workspace]
 
 members= [
-	"happs/agent-registration-open/zomes/agent_registration/code",
-  "lib/lib",
-  "lib/storage",
-  "lib/storage_consts",
+  "zome/lib",
+  "zome/storage",
+  "zome/storage_consts",
+  "zome/zome",
 ]

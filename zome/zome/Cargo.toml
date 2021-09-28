@@ -5,13 +5,11 @@ authors = ["pospi <pospi@spadgos.com>"]
 edition = "2018"
 
 [dependencies]
-serde = "1.0.104"
-serde_json = { version = "1.0.47", features = ["preserve_order"] }
-hdk = "~0.0.50-alpha4"
-hdk_proc_macros = "~0.0.50-alpha4"
+serde = "1"
+hdk = "0.0"
 
-hc_zome_agent_registration_storage = { path = "../../../../../lib/storage" }
-hc_zome_agent_registration_lib = { path = "../../../../../lib/lib" }
+hc_zome_agent_registration_storage = { path = "../storage" }
+hc_zome_agent_registration_lib = { path = "../lib" }
 
 [lib]
 path = "src/lib.rs"
