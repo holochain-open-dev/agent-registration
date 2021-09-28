@@ -8,9 +8,9 @@ Provides automatic registration of agents entering a network, and query capabili
 
 ## Development setup
 
-Using Holonix setup should work fine.
+Using the included Nix environment should be sufficient, otherwise you can attempt installing the Holochain tooling yourself.
 
-To build the extended DNAs, you will need to clone the [social triangulation zome](https://github.com/holochain-open-dev/social-triangulation/) in a folder adjacent to this one, with the name `happ-social-triangulation`. This is a temporary measure until a proper build & deployment system for Holochain zomes is available.
+Simply run `nix-shell` from within this directory to load all necessary utilities. Development environments (`sublime-text`, `code` etc) should be executed from within this context, rather than being launched separately.
 
 ## To do
 
