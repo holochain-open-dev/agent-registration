@@ -2,6 +2,7 @@ const {
   getDNA,
   buildConfig,
   buildRunner,
+  waitForPlayers,
   shimConsistency,
 } = require('./init')
 
@@ -33,18 +34,22 @@ runner.registerScenario('Agent registration API', async (scenario, t) => {
   resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: aliceAddr })
   t.equal(resp, true, 'can check own registration status')
 
-  // Bob installs the hApp and hits the DNA for the first time
+  // Bob installs the hApp
+  // ...and hits the DNA for the first time?
   await bob.startup()
   const [[bob_happ]] = await bob.installAgentsHapps([[TEST_DNAS.map(getDNA)]])
   const [bob_cell] = bob_happ.cells
   const bobAddr = bob_happ.agent
-  await scenario.consistency()
 
   resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
   t.equal(resp, false, 'other agents silent until they have accessed the DHT')
 
   resp = await bob_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
   t.equal(resp, true, 'can check own registration status upon accessing the DHT')
+  await scenario.consistency()
+
+  await waitForPlayers(bob, bob_cell.cellId, 2)
+  await waitForPlayers(alice, alice_cell.cellId, 2)
   await scenario.consistency()
 
   resp = await alice_cell.call('agent_registration', 'is_registered', { pubKey: bobAddr })
