@@ -66,9 +66,46 @@ function shimConsistency(s) {
   })
 }
 
+async function waitForPlayers(player, /*cell.*/cellId, nPlayers)
+{
+  while (true) {
+    const stateDumpRes = await player.adminWs().dumpState({ cell_id: cellId })
+    console.debug('state dump:', stateDumpRes)
+    const stateDump = parseStateDump(stateDumpRes)
+    console.info(`waiting for ${nPlayers} peers via player '${player.name}' in cell`, cellId)
+    if (stateDump.numPeers === nPlayers - 1) {
+      break
+    }
+    await delay(5000)
+  }
+}
+
+const delay = ms => new Promise(r => setTimeout(r, ms))
+
+// @see https://github.com/holochain/elemental-chat/blob/197bcbb860a2db52507facf3944bf35f71a0fdca/tests/src/behaviors/tx-per-second.ts#L96
+const parseStateDump = ([unused, stateDumpRelevant]) => {
+  const regex = /^--- Cell State Dump Summary ---\nNumber of other peers in p2p store: (\d+),\n(Ops: Limbo \(validation: (\d+) integration: (\d+)\) Integrated: (\d+)\n)?Elements authored: (\d+), Ops published: (\d+)/
+
+  const groups = regex.exec(stateDumpRelevant)
+
+  if (groups === null) {
+    throw new Error("failed to parse state dump")
+  }
+
+  return {
+    numPeers: Number.parseInt(groups[1], 10),
+    opsValidationLimbo: Number.parseInt(groups[3], 10),
+    opsIntegrationLimbo: Number.parseInt(groups[4], 10),
+    opsIntegrated: Number.parseInt(groups[5], 10),
+    elementsAuthored: Number.parseInt(groups[6], 10),
+    opsPublished: Number.parseInt(groups[7], 10),
+  }
+}
+
 module.exports = {
   getDNA,
   buildConfig,
   buildRunner,
+  waitForPlayers,
   shimConsistency,
 }
