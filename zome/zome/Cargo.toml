@@ -13,4 +13,4 @@ hc_zome_agent_registration_rpc = { path = "../rpc" }
 
 [lib]
 path = "src/lib.rs"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
