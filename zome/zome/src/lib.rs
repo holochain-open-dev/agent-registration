@@ -30,3 +30,8 @@ fn is_registered(RegistrationQueryParams { pub_key }: RegistrationQueryParams) -
 fn get_registered(_: ()) -> ExternResult<Vec<AgentPubKey>> {
     get_registered_agents()
 }
+
+#[hdk_extern]
+fn get_my_agent_pubkey() -> ExternResult<AgentPubKey> {
+    Ok(agent_info()?.agent_latest_pubkey)
+}
