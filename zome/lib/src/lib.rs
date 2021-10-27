@@ -22,7 +22,7 @@ pub fn is_registered_agent(address: &AgentPubKey) -> ExternResult<bool> {
 pub fn get_registered_agents() -> ExternResult<Vec<AgentPubKey>> {
     let child_paths = get_root_anchor().children()?;
 
-    Ok(child_paths.into_inner().iter().map(|l| {
+    Ok(child_paths.iter().map(|l| {
         let element = get(l.target.to_owned(), GetOptions::default())?.ok_or(WasmError::Guest(format!("Agent registration link invalid: {:?}", l.target)))?;
         let (_signed_header, entry) = element.into_inner();
         let entry = match entry {
