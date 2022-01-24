@@ -6,7 +6,7 @@ use hc_zome_agent_registration_rpc::*;
 #[hdk_extern]
 fn entry_defs(_: ()) -> ExternResult<EntryDefsCallbackResult> {
     Ok(EntryDefsCallbackResult::from(vec![
-        Path::entry_def(),
+        PathEntry::entry_def(),
     ]))
 }
 
