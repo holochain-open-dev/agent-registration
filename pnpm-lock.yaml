@@ -10,13 +10,13 @@ importers:
 
   test:
     specifiers:
-      '@holochain/tryorama': git@github.com:holochain/tryorama.git#3970c375e5f48bbf520e8ec906fb37f1ee29c35e
+      '@holochain/tryorama': 0.4.6
       faucet: ^0.0.1
       npm-run-all: ^4.1.5
       source-map-support: ^0.5.19
       tape: ^5.0.0
     devDependencies:
-      '@holochain/tryorama': github.com/holochain/tryorama/3970c375e5f48bbf520e8ec906fb37f1ee29c35e
+      '@holochain/tryorama': 0.4.6
       faucet: 0.0.1
       npm-run-all: 4.1.5
       source-map-support: 0.5.20
@@ -32,11 +32,11 @@ packages:
       kuler: 2.0.0
     dev: true
 
-  /@holochain/conductor-api/0.2.1:
-    resolution: {integrity: sha512-H7C3LeSGE98/SCg5TcUQRMP3afZ1IDzjKMBUlIPTJbUcBhwgwdVg87XBhkI1atPnKyxugYdgelQtT+6hKu6GNA==}
+  /@holochain/conductor-api/0.2.4:
+    resolution: {integrity: sha512-MoTUv+sAQA8d1XJyqSxdcxBAO+bkCKbvuzhEaDTOrqyct7LPUzivPYinoDqmwpF2R6/kZpQVw8FZ+zVwENPnVA==}
+    deprecated: Use @holochain/client instead
     dependencies:
       '@msgpack/msgpack': 2.4.0
-      '@types/ws': 7.4.7
       cross-fetch: 3.1.4
       isomorphic-ws: 4.0.1_ws@7.5.5
       nanoid: 3.1.28
@@ -55,6 +55,33 @@ packages:
       winston-null: 2.0.0_winston@3.3.3
     dev: true
 
+  /@holochain/tryorama/0.4.6:
+    resolution: {integrity: sha512-OtfpHC/+RswD7Ljhbvie6+27Upyt2Itkc2h3ypnJ4COkM4SLc8DkTlycBUh7iohivQ4YEqTkrZRofDFHQsVBPw==}
+    dependencies:
+      '@holochain/conductor-api': 0.2.4
+      '@holochain/hachiko': 0.5.2
+      '@iarna/toml': 2.2.5
+      '@msgpack/msgpack': 2.7.1
+      async-mutex: 0.1.4
+      axios: 0.19.2
+      base-64: 0.1.0
+      colors: 1.4.0
+      fp-ts: 2.11.4
+      get-port: 5.1.1
+      io-ts: 2.2.16_fp-ts@2.11.4
+      io-ts-reporters: 1.2.2_fp-ts@2.11.4+io-ts@2.2.16
+      lodash: 4.17.21
+      memoizee: 0.4.15
+      ramda: 0.26.1
+      uuid: 8.3.2
+      winston: 3.3.3
+      ws: 7.5.5
+      yaml: 1.10.2
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: true
+
   /@iarna/toml/2.2.5:
     resolution: {integrity: sha512-trnsAYxU3xnS1gPHPyU961coFyLkh4gAD/0zQ5mymY4yOZ+CYvsPqUbOFSw0aDM4y0tV7tiFxL/1XfXPNC6IPg==}
     dev: true
@@ -67,16 +94,6 @@ packages:
   /@msgpack/msgpack/2.7.1:
     resolution: {integrity: sha512-ApwiSL2c9ObewdOE/sqt788P1C5lomBOHyO8nUBCr4ofErBCnYQ003NtJ8lS9OQZc11ximkbmgAZJjB8y6cCdA==}
     engines: {node: '>= 10'}
-    dev: true
-
-  /@types/node/16.10.1:
-    resolution: {integrity: sha512-4/Z9DMPKFexZj/Gn3LylFgamNKHm4K3QDi0gz9B26Uk0c8izYf97B5fxfpspMNkWlFupblKM/nV8+NA9Ffvr+w==}
-    dev: true
-
-  /@types/ws/7.4.7:
-    resolution: {integrity: sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==}
-    dependencies:
-      '@types/node': 16.10.1
     dev: true
 
   /ansi-styles/3.2.1:
@@ -1354,35 +1371,4 @@ packages:
   /yaml/1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
-    dev: true
-
-  github.com/holochain/tryorama/3970c375e5f48bbf520e8ec906fb37f1ee29c35e:
-    resolution: {tarball: https://codeload.github.com/holochain/tryorama/tar.gz/3970c375e5f48bbf520e8ec906fb37f1ee29c35e}
-    name: '@holochain/tryorama'
-    version: 0.4.3
-    prepare: true
-    requiresBuild: true
-    dependencies:
-      '@holochain/conductor-api': 0.2.1
-      '@holochain/hachiko': 0.5.2
-      '@iarna/toml': 2.2.5
-      '@msgpack/msgpack': 2.7.1
-      async-mutex: 0.1.4
-      axios: 0.19.2
-      base-64: 0.1.0
-      colors: 1.4.0
-      fp-ts: 2.11.4
-      get-port: 5.1.1
-      io-ts: 2.2.16_fp-ts@2.11.4
-      io-ts-reporters: 1.2.2_fp-ts@2.11.4+io-ts@2.2.16
-      lodash: 4.17.21
-      memoizee: 0.4.15
-      ramda: 0.26.1
-      uuid: 8.3.2
-      winston: 3.3.3
-      ws: 7.5.5
-      yaml: 1.10.2
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
     dev: true
