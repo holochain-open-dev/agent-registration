@@ -17,8 +17,16 @@ fn init(_: ()) -> ExternResult<InitCallbackResult> {
 }
 
 #[hdk_extern]
-fn validate(validation_data: ValidateData) -> ExternResult<ValidateCallbackResult> {
-    validate_registration_path(validation_data)
+fn validate(op: Op) -> ExternResult<ValidateCallbackResult> {
+    match op {
+        Op::StoreElement { .. } => Ok(ValidateCallbackResult::Valid),
+        Op::StoreEntry { entry, header } => validate_registration_path(entry, header),
+        Op::RegisterCreateLink { .. } => Ok(ValidateCallbackResult::Valid),
+        Op::RegisterDeleteLink { .. } => Ok(ValidateCallbackResult::Invalid("cannot delete registered agent links".to_string())),
+        Op::RegisterUpdate { .. } => Ok(ValidateCallbackResult::Invalid("cannot update registered agent information".to_string())),
+        Op::RegisterDelete { .. } => Ok(ValidateCallbackResult::Invalid("cannot delete registered agent data".to_string())),
+        Op::RegisterAgentActivity { .. } => Ok(ValidateCallbackResult::Valid),
+    }
 }
 
 #[hdk_extern]

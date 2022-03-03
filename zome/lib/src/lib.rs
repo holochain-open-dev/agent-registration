@@ -56,15 +56,8 @@ pub fn init_agent_registration_storage() -> ExternResult<()>
 
 /// Checks for and validates any creation of an agent address path
 ///
-pub fn validate_registration_path(validation_data: ValidateData) -> ExternResult<ValidateCallbackResult>
+pub fn validate_registration_path(entry: Entry, signed_header: SignedHashed<EntryCreationHeader>) -> ExternResult<ValidateCallbackResult>
 {
-    let element = validation_data.element;
-    let (signed_header, entry) = element.into_inner();
-    let entry = match entry {
-        ElementEntry::Present(e) => e,
-        _ => return Ok(ValidateCallbackResult::Valid),
-    };
-
     let root_path = get_root_anchor();
 
     match Path::try_from(&entry) {
@@ -82,10 +75,10 @@ pub fn validate_registration_path(validation_data: ValidateData) -> ExternResult
 
 /// Ensure that the trailing `Component` of a `Path` matches the `AgentPubKey` of the agent signing some header
 ///
-fn validate_path_agent_matches(path_with_agent_suffix: &Path, signed_header: &SignedHeaderHashed) -> ExternResult<ValidateCallbackResult>
+fn validate_path_agent_matches(path_with_agent_suffix: &Path, signed_header: &SignedHashed<EntryCreationHeader>) -> ExternResult<ValidateCallbackResult>
 {
     let written_agent_pubkey = agent_pubkey_from_trailing_component(path_with_agent_suffix)?;
-    verify_signature(written_agent_pubkey, signed_header.signature().to_owned(), signed_header.header())?;
+    verify_signature(written_agent_pubkey, signed_header.signature().to_owned(), (*signed_header).hashed.to_owned())?;
     Ok(ValidateCallbackResult::Valid)
 }
 
